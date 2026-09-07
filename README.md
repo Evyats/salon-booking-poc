@@ -7,6 +7,7 @@ Hebrew, RTL, mobile-first React/Vite frontend for one fictional barbershop.
 Requires Node.js 22.12+ (or a compatible current LTS release).
 
 ```sh
+cd frontend
 npm install
 npm run dev
 ```
@@ -35,14 +36,13 @@ Phone numbers and verification codes are not persisted. This is not real auth.
 - `supabase/`: local configuration, migrations, seed data, and Edge Functions.
 - `supabase/functions/health/`: public backend health-check endpoint.
 - `SETUP.md`: local commands and hosted Supabase/Vercel linking instructions.
-- `DESIGN.md`: reference synthesis, design tokens, and image sources.
-- `design-previews/`: desktop/mobile screenshots from the visual review.
+- `docs/design/DESIGN.md`: reference synthesis, design tokens, and image sources.
+- `docs/design/design-previews/`: desktop/mobile screenshots from the visual review.
 - `PLAN.md`: implementation stages and current progress.
-- `inspirations/`: user-supplied design references.
+- `docs/design/inspirations/`: user-supplied design references.
 
 The Supabase/Vercel structure is configured. Hosted account linking, database
 migrations, real OTP verification, owner dashboard, and production deployment
-remain for the following stages. The root `vercel.json` builds only the frontend.
+remain for the following stages. Vercel uses `frontend/` as its project root.
 
-Run all documented commands from the repository root. See `SETUP.md` for the
-current Supabase and Vercel setup.
+See `SETUP.md` for the current Supabase and Vercel setup.

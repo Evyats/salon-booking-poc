@@ -5,6 +5,7 @@ The repository is ready for one Vercel frontend and one Supabase backend.
 ## Local frontend
 
 ```powershell
+cd frontend
 npm install
 npm run dev
 ```
@@ -16,7 +17,7 @@ Vite normally opens at `http://localhost:5173`. Stop it with `Ctrl+C`.
 Start Docker Desktop first, then run from the repository root:
 
 ```powershell
-npm run supabase:start
+npx supabase start
 ```
 
 The first start downloads several Docker images. Supabase prints the local API,
@@ -31,9 +32,9 @@ http://127.0.0.1:54321/functions/v1/health
 Useful commands:
 
 ```powershell
-npm run supabase:status
-npm run supabase:reset
-npm run supabase:stop
+npx supabase status
+npx supabase db reset
+npx supabase stop
 ```
 
 ## Link a hosted Supabase project
@@ -69,14 +70,16 @@ not need to be copied into this file.
 
 ## Deploy the frontend to Vercel
 
-The root `vercel.json` builds only the Vite frontend and serves its `dist` output.
+In the Vercel dashboard, set the project's **Root Directory** to `frontend`.
+Its `vercel.json` builds the Vite app and serves the `dist` output.
 
 ```powershell
+cd frontend
 npx vercel login
 npx vercel
 ```
 
-The second command creates a preview deployment and links this repository. Once
+The second command creates a preview deployment and links the frontend. Once
 the preview is approved, deploy production with:
 
 ```powershell

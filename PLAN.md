@@ -15,7 +15,7 @@ recurring schedules, payments, and customer account dashboards.
 ## Progress
 
 Current: frontend design first, as requested. The React/Vite customer prototype
-is implemented with mock data. See DESIGN.md for the visual direction and
+is implemented with mock data. See `docs/design/DESIGN.md` for the visual direction and
 README.md for local startup. Full implementation stages below remain incomplete.
 
 Stage 1 local setup is complete. Cloud account linking and deployment are pending
@@ -34,7 +34,7 @@ Checked date/week navigation, invalid details, wrong/correct demo codes,
 confirmation, calendar download, reload persistence, cancellation confirmation,
 mobile navigation, FAQ expansion, and dialog keyboard focus/Escape.
 Automated axe WCAG A/AA checks reported no violations on the final desktop/mobile
-page and details dialog. Preview screenshots are in design-previews/.
+page and details dialog. Preview screenshots are in `docs/design/design-previews/`.
 
 Update this checklist after completing and verifying each stage. Record partial
 progress or blockers under its stage, and update the next-stage line above.
