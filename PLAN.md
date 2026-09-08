@@ -25,8 +25,12 @@ Stage 2 is temporarily paused because Meta's developer-account SMS verification
 is not delivering its code. Stage 3 is complete: the hosted database has the
 customers, appointments, and otp_challenges tables with RLS enabled.
 
-Next: inspect the new tables in the Supabase dashboard, then begin Stage 4 while
-Meta verification is unavailable.
+Stage 4 database rules are applied: authenticated users need protected owner
+metadata to access customer and appointment rows, and the database rejects two
+confirmed appointments for the same half-hour slot.
+
+Next: create the owner Auth user in the Supabase dashboard and assign its owner
+role while Meta verification is unavailable.
 
 - [x] Review all supplied references and define one Hebrew, mobile-first identity.
 - [x] Implement the customer frontend with stock images and mock booking flow.
@@ -67,9 +71,10 @@ progress or blockers under its stage, and update the next-stage line above.
   - [x] Apply the migrations to Supabase.
 
 - [ ] 4. Access and booking rules
-  - Configure owner login and RLS permissions.
-  - Define database constraints preventing double bookings.
-  - Require owner authorization for owner actions, including when backend code
+  - [ ] Create the owner Auth user and assign protected owner metadata.
+  - [x] Configure owner-only RLS permissions.
+  - [x] Define database constraints preventing double bookings.
+  - [ ] Require owner authorization for owner actions, including when backend code
     uses the service-role key.
 
 - [ ] 5. OTP
