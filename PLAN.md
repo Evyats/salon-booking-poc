@@ -14,16 +14,19 @@ recurring schedules, payments, and customer account dashboards.
 
 ## Progress
 
-Current: frontend design first, as requested. The React/Vite customer prototype
-is implemented with mock data. See `docs/design/DESIGN.md` for the visual direction and
-README.md for local startup. Full implementation stages below remain incomplete.
+The React/Vite customer prototype is implemented with mock data. See
+`docs/design/DESIGN.md` for the visual direction and README.md for local startup.
 
 Stage 1 is complete. The hosted Supabase project is linked, the public health
 function is deployed and verified, and the frontend is deployed on Vercel.
 Docker Desktop is only needed for the local Supabase stack. See SETUP.md.
 
-Next: begin Stage 2 by setting up Meta's WhatsApp test sender and proving message
-delivery to a test phone.
+Stage 2 is temporarily paused because Meta's developer-account SMS verification
+is not delivering its code. Stage 3 is complete: the hosted database has the
+customers, appointments, and otp_challenges tables with RLS enabled.
+
+Next: inspect the new tables in the Supabase dashboard, then begin Stage 4 while
+Meta verification is unavailable.
 
 - [x] Review all supplied references and define one Hebrew, mobile-first identity.
 - [x] Implement the customer frontend with stock images and mock booking flow.
@@ -56,11 +59,12 @@ progress or blockers under its stage, and update the next-stage line above.
   - Set up Meta developer/business accounts and the provided test sender.
   - Add and verify your personal phone as a test recipient.
   - Send a test message, then prove OTP delivery to your phone.
+  - Blocked for now: Meta developer-account SMS verification is not arriving.
 
-- [ ] 3. Database
-  - Create migrations for customers, appointments, and otp_challenges.
-  - Include a customer blocked flag.
-  - Apply the migrations to Supabase.
+- [x] 3. Database
+  - [x] Create migrations for customers, appointments, and otp_challenges.
+  - [x] Include a customer blocked flag.
+  - [x] Apply the migrations to Supabase.
 
 - [ ] 4. Access and booking rules
   - Configure owner login and RLS permissions.

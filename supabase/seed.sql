@@ -1,1 +1,3 @@
--- Development seed data will be added with the database stage.
+-- The salon identity, barber, and service remain fixed in application code for
+-- this single-business POC. Add local-only customer and appointment fixtures
+-- here when the booking flow needs them.

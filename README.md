@@ -41,8 +41,9 @@ Phone numbers and verification codes are not persisted. This is not real auth.
 - `PLAN.md`: implementation stages and current progress.
 - `docs/design/inspirations/`: user-supplied design references.
 
-The Supabase/Vercel structure is configured. Hosted account linking, database
-migrations, real OTP verification, owner dashboard, and production deployment
-remain for the following stages. Vercel uses `frontend/` as its project root.
+The frontend is deployed through Vercel, and the linked Supabase project has the
+initial database schema and health Edge Function. Real OTP verification and the
+owner dashboard remain for later stages. Vercel uses `frontend/` as its project
+root.
 
 See `SETUP.md` for the current Supabase and Vercel setup.

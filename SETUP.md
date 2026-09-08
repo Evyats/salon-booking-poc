@@ -91,5 +91,6 @@ When the frontend starts using Supabase, copy the two `VITE_` variables from
 
 ## Current boundaries
 
-The health function is public and contains no private data. Database migrations,
-owner authentication, WhatsApp, and real customer booking are later stages.
+The health function is public and contains no private data. The initial database
+migration is applied. Owner authentication, WhatsApp, and real customer booking
+are later stages.
