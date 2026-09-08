@@ -35,6 +35,7 @@ Phone numbers and verification codes are not persisted. This is not real auth.
 - `frontend/src/demo.js`: mock availability and demo appointment storage.
 - `supabase/`: local configuration, migrations, seed data, and Edge Functions.
 - `supabase/functions/health/`: public backend health-check endpoint.
+- `supabase/functions/owner-health/`: authenticated owner-role check endpoint.
 - `SETUP.md`: local commands and hosted Supabase/Vercel linking instructions.
 - `docs/design/DESIGN.md`: reference synthesis, design tokens, and image sources.
 - `docs/design/design-previews/`: desktop/mobile screenshots from the visual review.

@@ -27,10 +27,12 @@ customers, appointments, and otp_challenges tables with RLS enabled.
 
 Stage 4 database rules are applied: authenticated users need protected owner
 metadata to access customer and appointment rows, and the database rejects two
-confirmed appointments for the same half-hour slot.
+confirmed appointments for the same half-hour slot. The owner Auth user now has
+the protected owner role. A protected owner-health function rejects requests
+without authentication; its owner-token success path will be tested with login.
 
-Next: create the owner Auth user in the Supabase dashboard and assign its owner
-role while Meta verification is unavailable.
+Next: begin the OTP backend with a temporary mock message sender while Meta
+verification is unavailable.
 
 - [x] Review all supplied references and define one Hebrew, mobile-first identity.
 - [x] Implement the customer frontend with stock images and mock booking flow.
@@ -71,11 +73,12 @@ progress or blockers under its stage, and update the next-stage line above.
   - [x] Apply the migrations to Supabase.
 
 - [ ] 4. Access and booking rules
-  - [ ] Create the owner Auth user and assign protected owner metadata.
+  - [x] Create the owner Auth user and assign protected owner metadata.
   - [x] Configure owner-only RLS permissions.
   - [x] Define database constraints preventing double bookings.
-  - [ ] Require owner authorization for owner actions, including when backend code
-    uses the service-role key.
+  - [x] Add a protected owner endpoint that checks authentication and owner role.
+  - [ ] Verify its owner-token success path when the owner login UI exists.
+  - [ ] Apply the same guard before future owner actions use service-role access.
 
 - [ ] 5. OTP
   - Generate codes and store keyed hashes (HMAC).
