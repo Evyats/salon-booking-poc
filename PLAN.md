@@ -18,13 +18,12 @@ Current: frontend design first, as requested. The React/Vite customer prototype
 is implemented with mock data. See `docs/design/DESIGN.md` for the visual direction and
 README.md for local startup. Full implementation stages below remain incomplete.
 
-Stage 1 local setup is complete. The hosted Supabase project is linked and the
-public health function is deployed and verified. Vercel linking and the frontend
-preview deployment remain. Docker Desktop is only needed for the local Supabase
-stack. See SETUP.md.
+Stage 1 is complete. The hosted Supabase project is linked, the public health
+function is deployed and verified, and the frontend is deployed on Vercel.
+Docker Desktop is only needed for the local Supabase stack. See SETUP.md.
 
-Next: link Vercel and deploy the frontend preview to finish Stage 1, then begin
-the WhatsApp proof.
+Next: begin Stage 2 by setting up Meta's WhatsApp test sender and proving message
+delivery to a test phone.
 
 - [x] Review all supplied references and define one Hebrew, mobile-first identity.
 - [x] Implement the customer frontend with stock images and mock booking flow.
@@ -43,7 +42,7 @@ progress or blockers under its stage, and update the next-stage line above.
 
 ## Stages
 
-- [ ] 1. Setup
+- [x] 1. Setup
   - [x] Initialize the Git repository and React/Vite frontend.
   - [x] Add the project-scoped Supabase CLI and local configuration.
   - [x] Add the Edge Functions structure and a public health endpoint.
@@ -51,7 +50,7 @@ progress or blockers under its stage, and update the next-stage line above.
   - [x] Keep secrets out of Git and provide frontend/backend env examples.
   - [x] Link a hosted Supabase project and deploy the health function.
   - [x] Confirm that real backend secrets are deferred until WhatsApp and OTP.
-  - [ ] Link Vercel and create a frontend preview deployment.
+  - [x] Link Vercel and create a frontend deployment.
 
 - [ ] 2. WhatsApp proof
   - Set up Meta developer/business accounts and the provided test sender.
