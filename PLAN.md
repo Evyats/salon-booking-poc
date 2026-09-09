@@ -31,10 +31,10 @@ confirmed appointments for the same half-hour slot. The owner Auth user now has
 the protected owner role. A protected owner-health function rejects requests
 without authentication; its owner-token success path will be tested with login.
 
-Stages 5 and 6 are complete. Stage 7's owner dashboard is implemented at
-`/owner`: it authenticates through Supabase Auth, reads and changes data under
-owner RLS policies, and uses an atomic database function for manual bookings.
-Next: configure the frontend publishable key and verify the owner actions live.
+Stages 5 through 7 are complete. The deployed customer flow creates verified
+bookings, and `/owner` authenticates through Supabase Auth before reading or
+changing data under owner RLS policies. Next: add appointment-specific customer
+cancellation links.
 
 - [x] Review all supplied references and define one Hebrew, mobile-first identity.
 - [x] Implement the customer frontend with stock images and mock booking flow.
@@ -74,13 +74,13 @@ progress or blockers under its stage, and update the next-stage line above.
   - [x] Include a customer blocked flag.
   - [x] Apply the migrations to Supabase.
 
-- [ ] 4. Access and booking rules
+- [x] 4. Access and booking rules
   - [x] Create the owner Auth user and assign protected owner metadata.
   - [x] Configure owner-only RLS permissions.
   - [x] Define database constraints preventing double bookings.
   - [x] Add a protected owner endpoint that checks authentication and owner role.
-  - [ ] Verify its owner-token success path when the owner login UI exists.
-  - [ ] Apply the same guard before future owner actions use service-role access.
+  - [x] Verify its owner-token success path through the owner login UI.
+  - [x] Keep owner actions under the user JWT and RLS instead of service-role access.
 
 - [x] 5. OTP
   - [x] Generate codes and store keyed hashes (HMAC).
@@ -101,13 +101,13 @@ progress or blockers under its stage, and update the next-stage line above.
   - [x] Show confirmation and temporarily log the confirmation for mock delivery.
   - [x] Verify the complete browser flow using a code from protected logs.
 
-- [ ] 7. Owner dashboard
+- [x] 7. Owner dashboard
   - [x] Add an owner-only login and verify protected owner metadata.
   - [x] View today's and upcoming appointments in a mobile-first timeline.
   - [x] Add appointments manually through an atomic owner-only function.
   - [x] Cancel appointments and release their slots.
   - [x] Block and unblock customers through owner RLS permissions.
-  - [ ] Configure the Vercel publishable key and test all actions live.
+  - [x] Configure the Vercel publishable key and test all actions live.
 
 - [ ] 8. Customer cancellation
   - Provide an unguessable link authorizing access to one appointment.
