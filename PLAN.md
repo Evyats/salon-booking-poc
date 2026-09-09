@@ -31,10 +31,10 @@ confirmed appointments for the same half-hour slot. The owner Auth user now has
 the protected owner role. A protected owner-health function rejects requests
 without authentication; its owner-token success path will be tested with login.
 
-Stages 5 and 6 are complete. The deployed customer flow loads database-backed
-availability, verifies a mock-delivered OTP, atomically creates an appointment,
-and shows its confirmation. Until Meta is available, codes and confirmations are
-written only to protected Edge Function logs. Next: build the owner dashboard.
+Stages 5 and 6 are complete. Stage 7's owner dashboard is implemented at
+`/owner`: it authenticates through Supabase Auth, reads and changes data under
+owner RLS policies, and uses an atomic database function for manual bookings.
+Next: configure the frontend publishable key and verify the owner actions live.
 
 - [x] Review all supplied references and define one Hebrew, mobile-first identity.
 - [x] Implement the customer frontend with stock images and mock booking flow.
@@ -102,9 +102,12 @@ progress or blockers under its stage, and update the next-stage line above.
   - [x] Verify the complete browser flow using a code from protected logs.
 
 - [ ] 7. Owner dashboard
-  - View today's and upcoming appointments.
-  - Manually add and cancel appointments.
-  - Mark customers as blocked.
+  - [x] Add an owner-only login and verify protected owner metadata.
+  - [x] View today's and upcoming appointments in a mobile-first timeline.
+  - [x] Add appointments manually through an atomic owner-only function.
+  - [x] Cancel appointments and release their slots.
+  - [x] Block and unblock customers through owner RLS permissions.
+  - [ ] Configure the Vercel publishable key and test all actions live.
 
 - [ ] 8. Customer cancellation
   - Provide an unguessable link authorizing access to one appointment.

@@ -35,6 +35,7 @@ appear only in temporary protected function logs and are never stored in a table
 - `frontend/`: React/Vite app and local stock photography.
 - `frontend/src/api.js`: browser calls to the public booking Edge Functions.
 - `frontend/src/demo.js`: fixed opening hours and local display helpers.
+- `frontend/src/owner/`: authenticated owner login and scheduling dashboard.
 - `supabase/`: local configuration, migrations, seed data, and Edge Functions.
 - `supabase/functions/health/`: public backend health-check endpoint.
 - `supabase/functions/owner-health/`: authenticated owner-role check endpoint.
@@ -48,9 +49,10 @@ appear only in temporary protected function logs and are never stored in a table
 - `PLAN.md`: implementation stages and current progress.
 - `docs/design/inspirations/`: user-supplied design references.
 
-The linked Supabase project has the database schema, access rules, OTP endpoints,
-availability endpoint, and atomic booking endpoint. OTP and confirmation delivery
-are temporarily mocked in protected function logs. The owner dashboard remains
-for a later stage. Vercel uses `frontend/` as its project root.
+The linked Supabase project has the database schema, access rules, customer
+booking endpoints, and owner booking function. OTP and confirmation delivery are
+temporarily mocked in protected function logs. The customer site is served at
+`/`; the authenticated owner dashboard is at `/owner`. Vercel uses `frontend/`
+as its project root.
 
 See `SETUP.md` for the current Supabase and Vercel setup.

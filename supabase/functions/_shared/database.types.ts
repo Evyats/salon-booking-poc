@@ -128,6 +128,19 @@ export type Database = {
           starts_at: string;
         }[];
       };
+      create_owner_booking: {
+        Args: {
+          p_booking_date: string;
+          p_booking_time: string;
+          p_full_name: string;
+          p_phone: string;
+        };
+        Returns: {
+          appointment_id: string;
+          customer_id: string;
+          starts_at: string;
+        }[];
+      };
       is_owner: { Args: never; Returns: boolean };
       list_booked_slots: {
         Args: { p_days?: number; p_from: string };

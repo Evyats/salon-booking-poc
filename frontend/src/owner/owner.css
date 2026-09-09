@@ -1,0 +1,659 @@
+.owner-shell,
+.owner-login-shell,
+.owner-loading {
+  min-height: 100vh;
+  background:
+    linear-gradient(90deg, transparent 49.9%, #deddd2 50%, transparent 50.1%)
+      center 118px / min(1180px, calc(100% - 64px)) 1px no-repeat,
+    var(--paper);
+  color: var(--ink);
+}
+
+.owner-loading {
+  display: grid;
+  place-items: center;
+  font-weight: 600;
+}
+
+.owner-header {
+  width: min(1180px, calc(100% - 64px));
+  min-height: 82px;
+  margin-inline: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--line);
+}
+
+.owner-header > div,
+.owner-brand {
+  display: flex;
+  align-items: center;
+}
+
+.owner-brand {
+  gap: 10px;
+}
+
+.owner-brand > svg {
+  color: var(--orange);
+}
+
+.owner-brand strong {
+  font-family: var(--display);
+  font-size: 27px;
+  line-height: 1;
+}
+
+.owner-brand span {
+  padding-right: 10px;
+  border-right: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.owner-header > div {
+  gap: 14px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.owner-page {
+  width: min(1080px, calc(100% - 64px));
+  margin-inline: auto;
+  padding-block: 58px 100px;
+}
+
+.owner-hero {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 30px;
+  margin-bottom: 34px;
+}
+
+.owner-kicker,
+.owner-section-heading span {
+  display: block;
+  color: var(--orange);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  margin-bottom: 7px;
+}
+
+.owner-hero h1,
+.owner-login-card h1 {
+  margin: 0;
+  font-family: var(--display);
+  font-size: clamp(42px, 6vw, 72px);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+.owner-hero p {
+  margin-top: 12px;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.owner-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  margin-bottom: 26px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--white);
+}
+
+.owner-stats > div {
+  min-height: 112px;
+  padding: 23px 26px;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 0 13px;
+  border-left: 1px solid var(--line);
+}
+
+.owner-stats > div:last-child {
+  border-left: 0;
+}
+
+.owner-stats svg {
+  grid-row: 1 / 3;
+  color: var(--orange);
+}
+
+.owner-stats strong {
+  font-family: var(--display);
+  font-size: 30px;
+  font-weight: 400;
+  line-height: 1;
+}
+
+.owner-stats span {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.owner-schedule,
+.owner-manual-card {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--white);
+  box-shadow: 0 20px 60px rgb(41 55 46 / 5%);
+}
+
+.owner-schedule {
+  padding: 28px;
+}
+
+.owner-section-heading {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.owner-section-heading h2 {
+  font-size: 28px;
+}
+
+.owner-view-tabs {
+  display: inline-flex;
+  gap: 5px;
+  margin-block: 25px 31px;
+  padding: 4px;
+  border-radius: 9px;
+  background: #efeee6;
+}
+
+.owner-view-tabs button {
+  min-width: 110px;
+  padding: 9px 16px;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.owner-view-tabs button.active {
+  background: var(--white);
+  color: var(--ink);
+  box-shadow: 0 2px 7px rgb(40 43 38 / 8%);
+}
+
+.owner-view-tabs span {
+  min-width: 20px;
+  height: 20px;
+  margin-right: 6px;
+  padding-inline: 5px;
+  display: inline-grid;
+  place-items: center;
+  border-radius: 999px;
+  background: #e2e1d7;
+  font-size: 10px;
+}
+
+.owner-day + .owner-day {
+  margin-top: 36px;
+}
+
+.owner-day > header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 13px;
+  border-bottom: 1px solid var(--ink);
+}
+
+.owner-day > header strong {
+  font-family: var(--display);
+  font-size: 18px;
+  font-weight: 400;
+}
+
+.owner-day > header span {
+  color: var(--muted);
+  font-size: 10px;
+}
+
+.owner-timeline {
+  position: relative;
+}
+
+.owner-timeline::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 72px;
+  width: 1px;
+  background: var(--line);
+}
+
+.owner-appointment {
+  position: relative;
+  display: grid;
+  grid-template-columns: 72px minmax(0, 1fr) auto;
+  align-items: center;
+  min-height: 112px;
+  border-bottom: 1px solid var(--line);
+}
+
+.owner-appointment:last-child {
+  border-bottom: 0;
+}
+
+.owner-appointment > time {
+  position: relative;
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+  font-family: var(--display);
+  font-size: 20px;
+}
+
+.owner-appointment > time::after {
+  content: "";
+  position: absolute;
+  left: -4px;
+  width: 9px;
+  height: 9px;
+  border: 2px solid var(--white);
+  border-radius: 50%;
+  background: var(--orange);
+  box-shadow: 0 0 0 1px var(--orange);
+}
+
+.owner-appointment-main {
+  min-width: 0;
+  padding: 19px 23px;
+}
+
+.owner-customer-line {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.owner-customer-line h3 {
+  font-size: 15px;
+}
+
+.owner-customer-line span {
+  padding: 3px 7px;
+  border-radius: 999px;
+  background: #ebeae0;
+  color: var(--muted);
+  font-size: 9px;
+  font-weight: 600;
+}
+
+.owner-customer-line span.blocked,
+.owner-customer-line span.cancelled-badge {
+  background: #f3ded6;
+  color: #8f321e;
+}
+
+.owner-appointment-main > a {
+  display: inline-block;
+  margin-top: 5px;
+  color: var(--orange);
+  font-size: 12px;
+}
+
+.owner-appointment-main > p {
+  margin-top: 5px;
+  color: var(--muted);
+  font-size: 10px;
+}
+
+.owner-appointment-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.owner-appointment-actions button {
+  min-height: 36px;
+  padding: 8px 11px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: transparent;
+  font-size: 10px;
+}
+
+.owner-appointment-actions button:hover {
+  background: #f1f0e8;
+}
+
+.owner-appointment-actions button.danger {
+  border-color: #ead1ca;
+  color: #9b3823;
+}
+
+.owner-appointment.cancelled {
+  opacity: 0.58;
+}
+
+.owner-appointment.cancelled > time::after {
+  background: var(--muted);
+  box-shadow: 0 0 0 1px var(--muted);
+}
+
+.owner-empty {
+  min-height: 260px;
+  padding: 50px 20px;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 8px;
+  text-align: center;
+  color: var(--muted);
+}
+
+.owner-empty svg {
+  margin-bottom: 9px;
+  color: var(--orange);
+}
+
+.owner-empty h3 {
+  color: var(--ink);
+  font-family: var(--display);
+  font-size: 21px;
+  font-weight: 400;
+}
+
+.owner-empty p {
+  font-size: 12px;
+}
+
+.owner-alert {
+  margin-block: 16px;
+  padding: 11px 13px;
+  border: 1px solid #e8c9c0;
+  border-radius: 7px;
+  background: #fff4f0;
+  color: #923922;
+  font-size: 12px;
+}
+
+.owner-manual-card {
+  margin-bottom: 26px;
+  padding: 27px;
+  border-top: 4px solid var(--honey);
+}
+
+.owner-manual-card form {
+  margin-top: 22px;
+}
+
+.owner-manual-card label,
+.owner-time-fieldset legend,
+.owner-login-card label {
+  display: grid;
+  gap: 7px;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.owner-field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+.owner-manual-card input,
+.owner-manual-card select,
+.owner-login-card input {
+  width: 100%;
+  min-height: 47px;
+  padding: 10px 12px;
+  border: 1px solid #cccec1;
+  border-radius: 7px;
+  background: var(--white);
+  color: var(--ink);
+  font: inherit;
+  font-size: 14px;
+}
+
+.owner-manual-card input:focus,
+.owner-manual-card select:focus,
+.owner-login-card input:focus {
+  border-color: var(--orange);
+  outline: 2px solid rgb(179 75 40 / 14%);
+}
+
+.owner-time-fieldset {
+  margin: 17px 0 0;
+  padding: 0;
+  border: 0;
+}
+
+.owner-time-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: 8px;
+}
+
+.owner-time-grid button {
+  min-width: 72px;
+  padding: 9px 12px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: transparent;
+  font-size: 12px;
+}
+
+.owner-time-grid button.selected {
+  border-color: var(--olive);
+  background: var(--olive);
+  color: white;
+}
+
+.owner-login-shell {
+  position: relative;
+  display: grid;
+  place-items: center;
+  padding: 80px 24px;
+  background:
+    linear-gradient(rgb(41 55 46 / 88%), rgb(41 55 46 / 88%)),
+    url("/images/studio.jpg") center / cover;
+}
+
+.owner-back-link {
+  position: absolute;
+  top: 26px;
+  right: 32px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: white;
+  font-size: 12px;
+}
+
+.owner-login-card {
+  width: min(430px, 100%);
+  padding: 42px;
+  border-radius: 14px;
+  background: var(--paper);
+  box-shadow: 0 25px 80px rgb(0 0 0 / 24%);
+}
+
+.owner-login-mark {
+  width: 56px;
+  height: 56px;
+  margin-bottom: 26px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--olive);
+  color: var(--honey);
+}
+
+.owner-login-card h1 {
+  font-size: 43px;
+}
+
+.owner-login-card > p:not(.owner-alert) {
+  margin-top: 13px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.owner-login-card form {
+  margin-top: 27px;
+}
+
+.owner-login-card label + input,
+.owner-login-card input + label {
+  margin-top: 13px;
+}
+
+.owner-login-card .button {
+  width: 100%;
+  margin-top: 22px;
+}
+
+.owner-login-security {
+  margin-top: 24px;
+  padding-top: 18px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 9px;
+}
+
+@media (max-width: 800px) {
+  .owner-header,
+  .owner-page {
+    width: min(100% - 32px, 680px);
+  }
+
+  .owner-header {
+    min-height: 70px;
+  }
+
+  .owner-header > div > span,
+  .owner-brand span {
+    display: none;
+  }
+
+  .owner-page {
+    padding-block: 35px 70px;
+  }
+
+  .owner-hero {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .owner-hero h1 {
+    font-size: 48px;
+  }
+
+  .owner-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .owner-stats > div {
+    min-height: 80px;
+    border-left: 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .owner-stats > div:last-child {
+    border-bottom: 0;
+  }
+
+  .owner-schedule,
+  .owner-manual-card {
+    padding: 21px 17px;
+  }
+
+  .owner-field-row {
+    grid-template-columns: 1fr;
+  }
+
+  .owner-view-tabs {
+    width: 100%;
+  }
+
+  .owner-view-tabs button {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .owner-timeline::before {
+    right: 57px;
+  }
+
+  .owner-appointment {
+    grid-template-columns: 57px minmax(0, 1fr);
+    padding-block: 8px;
+  }
+
+  .owner-appointment > time {
+    font-size: 17px;
+  }
+
+  .owner-appointment-main {
+    padding: 14px 17px;
+  }
+
+  .owner-appointment-actions {
+    grid-column: 2;
+    padding: 0 17px 12px;
+  }
+
+  .owner-login-card {
+    padding: 34px 24px;
+  }
+
+  .owner-back-link {
+    right: 20px;
+  }
+}
+
+@media (max-width: 430px) {
+  .owner-page,
+  .owner-header {
+    width: calc(100% - 24px);
+  }
+
+  .owner-schedule {
+    padding-inline: 13px;
+  }
+
+  .owner-customer-line h3 {
+    width: 100%;
+  }
+
+  .owner-appointment-actions {
+    flex-wrap: wrap;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .owner-shell *,
+  .owner-login-shell * {
+    scroll-behavior: auto;
+    transition-duration: 0.01ms !important;
+  }
+}

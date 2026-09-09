@@ -88,10 +88,11 @@ the preview is approved, deploy production with:
 npx vercel --prod
 ```
 
-Set `VITE_SUPABASE_URL` from `frontend/.env.example` in the Vercel project's
-environment variables. The current frontend does not need the publishable key
-because its booking Edge Functions are public and perform authorization with OTP
-challenges on the backend.
+Set both `VITE_SUPABASE_URL` and `VITE_SUPABASE_PUBLISHABLE_KEY` from
+`frontend/.env.example` in the Vercel project's environment variables. The
+publishable key initializes Supabase Auth for `/owner`; it is designed for browser
+use and receives only the permissions allowed by RLS. Never use the service-role
+key in Vercel's frontend environment.
 
 ## Current boundaries
 

@@ -426,6 +426,7 @@ export default function App() {
           <span lang="en" dir="ltr">
             A LITTLE OFF THE TOP.
           </span>
+          <a href="/owner">כניסת צוות</a>
         </div>
       </footer>
       <div className="mobile-booking-bar">
