@@ -31,11 +31,10 @@ confirmed appointments for the same half-hour slot. The owner Auth user now has
 the protected owner role. A protected owner-health function rejects requests
 without authentication; its owner-token success path will be tested with login.
 
-Stage 5's backend is deployed. Stage 6's availability and atomic booking backend
-are also deployed, and the existing customer dialog now calls them. Until Meta is
-available, codes and confirmations are written only to protected Edge Function
-logs. Next: configure the public Supabase URL in Vercel and verify one complete
-booking through the browser.
+Stages 5 and 6 are complete. The deployed customer flow loads database-backed
+availability, verifies a mock-delivered OTP, atomically creates an appointment,
+and shows its confirmation. Until Meta is available, codes and confirmations are
+written only to protected Edge Function logs. Next: build the owner dashboard.
 
 - [x] Review all supplied references and define one Hebrew, mobile-first identity.
 - [x] Implement the customer frontend with stock images and mock booking flow.
@@ -83,24 +82,24 @@ progress or blockers under its stage, and update the next-stage line above.
   - [ ] Verify its owner-token success path when the owner login UI exists.
   - [ ] Apply the same guard before future owner actions use service-role access.
 
-- [ ] 5. OTP
+- [x] 5. OTP
   - [x] Generate codes and store keyed hashes (HMAC).
   - [x] Keep the HMAC secret in backend environment variables.
   - [x] Deploy public request and verification Edge Functions.
   - [x] Enforce expiry, attempt limits, and resend limits.
   - [x] Test challenge creation, wrong attempts, and resend blocking live.
-  - [ ] Verify one correct mock code from the protected function log.
-  - [ ] Consume a verified challenge atomically when Stage 6 creates a booking.
+  - [x] Verify one correct mock code from the protected function log.
+  - [x] Consume a verified challenge atomically when Stage 6 creates a booking.
   - Phone verification authorizes booking; a persistent customer account/login
     is outside this POC's scope.
 
-- [ ] 6. Customer booking
+- [x] 6. Customer booking
   - [x] Show fixed slots minus confirmed database appointments.
   - [x] Collect name plus WhatsApp number and request a real OTP challenge.
   - [x] Verify OTP, then atomically consume it and create the appointment.
   - [x] Reject booking conflicts and blocked customers in the database.
   - [x] Show confirmation and temporarily log the confirmation for mock delivery.
-  - [ ] Verify the complete browser flow using a code from protected logs.
+  - [x] Verify the complete browser flow using a code from protected logs.
 
 - [ ] 7. Owner dashboard
   - View today's and upcoming appointments.
