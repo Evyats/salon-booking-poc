@@ -31,11 +31,11 @@ confirmed appointments for the same half-hour slot. The owner Auth user now has
 the protected owner role. A protected owner-health function rejects requests
 without authentication; its owner-token success path will be tested with login.
 
-Stage 5's backend is deployed: it creates and verifies short-lived OTP
-challenges using HMAC hashes, attempt limits, and resend limits. Until Meta is
-available, codes are written only to protected Edge Function logs by a temporary
-mock sender. Next: verify one correct code from the log, then connect this flow
-to the customer frontend in Stage 6.
+Stage 5's backend is deployed. Stage 6's availability and atomic booking backend
+are also deployed, and the existing customer dialog now calls them. Until Meta is
+available, codes and confirmations are written only to protected Edge Function
+logs. Next: configure the public Supabase URL in Vercel and verify one complete
+booking through the browser.
 
 - [x] Review all supplied references and define one Hebrew, mobile-first identity.
 - [x] Implement the customer frontend with stock images and mock booking flow.
@@ -95,10 +95,12 @@ progress or blockers under its stage, and update the next-stage line above.
     is outside this POC's scope.
 
 - [ ] 6. Customer booking
-  - Show fixed available slots and collect name plus WhatsApp number.
-  - Verify OTP, then create the appointment if the slot is still available.
-  - Show confirmation and send WhatsApp confirmation.
-  - Reject bookings from blocked customers.
+  - [x] Show fixed slots minus confirmed database appointments.
+  - [x] Collect name plus WhatsApp number and request a real OTP challenge.
+  - [x] Verify OTP, then atomically consume it and create the appointment.
+  - [x] Reject booking conflicts and blocked customers in the database.
+  - [x] Show confirmation and temporarily log the confirmation for mock delivery.
+  - [ ] Verify the complete browser flow using a code from protected logs.
 
 - [ ] 7. Owner dashboard
   - View today's and upcoming appointments.

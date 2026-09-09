@@ -115,7 +115,27 @@ export type Database = {
       [_ in never]: never;
     };
     Functions: {
+      create_customer_booking: {
+        Args: {
+          p_booking_date: string;
+          p_booking_time: string;
+          p_challenge_id: string;
+          p_full_name: string;
+        };
+        Returns: {
+          appointment_id: string;
+          customer_name: string;
+          starts_at: string;
+        }[];
+      };
       is_owner: { Args: never; Returns: boolean };
+      list_booked_slots: {
+        Args: { p_days?: number; p_from: string };
+        Returns: {
+          booking_date: string;
+          booking_time: string;
+        }[];
+      };
       mark_otp_verified: {
         Args: { p_challenge_id: string };
         Returns: string;

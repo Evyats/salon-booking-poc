@@ -12,17 +12,23 @@ import {
   Download,
   MapPin,
   MessageCircle,
+  Moon,
   Scissors,
   ShieldCheck,
   Sun,
   Sunset,
-  Moon,
   X,
 } from "lucide-react";
 import {
+  ApiError,
+  createBooking,
+  getBookedSlots,
+  requestBookingOtp,
+  verifyBookingOtp,
+} from "./api.js";
+import {
   asDate,
   availableTimes,
-  DEMO_CODE,
   downloadCalendar,
   formatDate,
   israelToday,
@@ -36,28 +42,55 @@ const periods = [
   { id: "evening", label: "ערב", Icon: Moon },
 ];
 
-export function Booking({ appointment, onBook }) {
+export function Booking({ appointment, onBook, availabilityVersion = 0 }) {
   const today = israelToday();
-  const initialDate =
-    nextDays(today, 14).find(
-      (date) => availableTimes(date, appointment).length,
-    ) || today;
+  const [bookedSlots, setBookedSlots] = useState(new Set());
+  const [availabilityError, setAvailabilityError] = useState(false);
+  const initialDate = nextDays(today, 14).find(
+    (date) => availableTimes(date, appointment, bookedSlots).length,
+  ) || today;
   const [date, setDate] = useState(initialDate);
   const [week, setWeek] = useState(0);
   const [period, setPeriod] = useState("all");
   const [time, setTime] = useState("");
   const days = nextDays(today, 28).slice(week * 7, week * 7 + 7);
-  const allTimes = availableTimes(date, appointment);
+  const timesForDate = (value) =>
+    availableTimes(value, appointment, bookedSlots);
+  const allTimes = timesForDate(date);
   const times = allTimes.filter(
     (value) =>
       period === "all" ||
       (period === "morning"
         ? value < "12:00"
         : period === "afternoon"
-          ? value >= "12:00" && value < "17:00"
-          : value >= "17:00"),
+        ? value >= "12:00" && value < "17:00"
+        : value >= "17:00"),
   );
   const validSelection = time && allTimes.includes(time);
+
+  useEffect(() => {
+    let active = true;
+    setAvailabilityError(false);
+
+    getBookedSlots(today, 28)
+      .then((slots) => {
+        if (!active) return;
+        setBookedSlots(
+          new Set(slots.map((slot) => `${slot.date}T${slot.time}`)),
+        );
+      })
+      .catch(() => {
+        if (active) setAvailabilityError(true);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [today, availabilityVersion]);
+
+  useEffect(() => {
+    if (time && !allTimes.includes(time)) setTime("");
+  }, [allTimes, time]);
 
   function changeDate(value) {
     setDate(value);
@@ -69,8 +102,7 @@ export function Booking({ appointment, onBook }) {
     setWeek(next);
     const values = nextDays(today, 28).slice(next * 7, next * 7 + 7);
     changeDate(
-      values.find((value) => availableTimes(value, appointment).length) ||
-        values[0],
+      values.find((value) => timesForDate(value).length) || values[0],
     );
   }
 
@@ -165,7 +197,7 @@ export function Booking({ appointment, onBook }) {
           </div>
           <div className="days-grid" role="group" aria-label="בחירת יום">
             {days.map((value) => {
-              const closed = !availableTimes(value, appointment).length;
+              const closed = !timesForDate(value).length;
               return (
                 <button
                   key={value}
@@ -182,15 +214,17 @@ export function Booking({ appointment, onBook }) {
                   </span>
                   <strong>{asDate(value).getDate()}</strong>
                   <span className="day-dot">
-                    {closed ? (
-                      asDate(value).getDay() === 6 ? (
-                        "סגור"
-                      ) : (
-                        "מלא"
+                    {closed
+                      ? (
+                        asDate(value).getDay() === 6
+                          ? (
+                            "סגור"
+                          )
+                          : (
+                            "מלא"
+                          )
                       )
-                    ) : (
-                      <i />
-                    )}
+                      : <i />}
                   </span>
                 </button>
               );
@@ -273,7 +307,9 @@ export function Booking({ appointment, onBook }) {
           </div>
           <p className="booking-note">
             <ShieldCheck size={13} />
-            בלי תשלום מראש. בלי הרשמה מסובכת.
+            {availabilityError
+              ? "לא הצלחנו לרענן זמינות כרגע. האימות הסופי יתבצע בקביעת התור."
+              : "בלי תשלום מראש. בלי הרשמה מסובכת."}
           </p>
         </div>
       </div>
@@ -286,16 +322,17 @@ export function BookingDialog({
   onClose,
   appointment,
   onConfirm,
-  onCancel,
+  onAvailabilityChanged,
 }) {
   const dialog = useRef(null);
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [code, setCode] = useState("");
+  const [challengeId, setChallengeId] = useState("");
   const [step, setStep] = useState(modal.kind);
   const [error, setError] = useState("");
   const [cooldown, setCooldown] = useState(0);
-  const [cancelPrompt, setCancelPrompt] = useState(false);
+  const [busy, setBusy] = useState(false);
   const slot = modal.slot || appointment;
   useEffect(() => {
     const previouslyFocused = document.activeElement;
@@ -332,7 +369,7 @@ export function BookingDialog({
     const id = setTimeout(() => setCooldown((value) => value - 1), 1000);
     return () => clearTimeout(id);
   }, [cooldown]);
-  function details(event) {
+  async function details(event) {
     event.preventDefault();
     if (name.trim().length < 2) {
       setError("איך קוראים לך? יש להזין לפחות שני תווים.");
@@ -342,36 +379,114 @@ export function BookingDialog({
       setError("יש להזין מספר נייד תקין, למשל 050-1234567.");
       return;
     }
+    setBusy(true);
     setError("");
-    setStep("otp");
-    setCooldown(30);
+    try {
+      const challenge = await requestBookingOtp(phone);
+      setChallengeId(challenge.challengeId);
+      setStep("otp");
+      setCooldown(challenge.resendAfterSeconds ?? 60);
+    } catch (requestError) {
+      if (requestError instanceof ApiError && requestError.status === 429) {
+        setCooldown(requestError.details.retryAfterSeconds ?? 60);
+        setError("ביקשת קוד לאחרונה. כדאי להמתין מעט ולנסות שוב.");
+      } else if (
+        requestError instanceof ApiError && requestError.status === 0
+      ) {
+        setError("לא הצלחנו להתחבר לשירות. כדאי לבדוק את החיבור ולנסות שוב.");
+      } else {
+        setError("לא הצלחנו ליצור קוד אימות כרגע. כדאי לנסות שוב.");
+      }
+    } finally {
+      setBusy(false);
+    }
   }
-  function verify(event) {
+
+  async function verify(event) {
     event.preventDefault();
-    if (code !== DEMO_CODE) {
-      setError(`הקוד לא מתאים. להדגמה, הזינו ${DEMO_CODE}.`);
+    if (!/^\d{6}$/.test(code)) {
+      setError("יש להזין את כל שש הספרות של הקוד.");
       return;
     }
-    if (!availableTimes(slot.date, appointment).includes(slot.time)) {
-      setError("השעה שבחרת כבר לא זמינה. יש לחזור ולבחור שעה אחרת.");
-      return;
-    }
-    onConfirm({ ...slot, name: name.trim() });
+
+    setBusy(true);
     setError("");
-    setStep("success");
+    try {
+      await verifyBookingOtp(challengeId, code);
+      const result = await createBooking({
+        challengeId,
+        fullName: name,
+        date: slot.date,
+        time: slot.time,
+      });
+      onConfirm(result.appointment);
+      setStep("success");
+    } catch (verificationError) {
+      if (
+        verificationError instanceof ApiError &&
+        typeof verificationError.details.attemptsRemaining === "number"
+      ) {
+        setError(
+          `הקוד לא מתאים. נותרו ${verificationError.details.attemptsRemaining} ניסיונות.`,
+        );
+      } else if (
+        verificationError instanceof ApiError &&
+        verificationError.status === 409
+      ) {
+        setError("השעה כבר נתפסה. יש לסגור ולבחור שעה אחרת.");
+        onAvailabilityChanged();
+      } else if (
+        verificationError instanceof ApiError &&
+        verificationError.status === 410
+      ) {
+        setError("תוקף הקוד פג. אפשר לבקש קוד חדש.");
+      } else if (
+        verificationError instanceof ApiError &&
+        verificationError.status === 429
+      ) {
+        setError("בוצעו יותר מדי ניסיונות. יש לבקש קוד חדש מאוחר יותר.");
+      } else if (
+        verificationError instanceof ApiError &&
+        verificationError.status === 0
+      ) {
+        setError("לא הצלחנו להתחבר לשירות. כדאי לבדוק את החיבור ולנסות שוב.");
+      } else {
+        setError("לא הצלחנו להשלים את קביעת התור כרגע. כדאי לנסות שוב.");
+      }
+    } finally {
+      setBusy(false);
+    }
   }
-  const title =
-    step === "details"
-      ? "נעים להכיר."
-      : step === "otp"
-        ? "רק לוודא שזה אתה."
-        : step === "success"
-          ? "סגור, יש לך תור."
-          : step === "cancelled"
-            ? "התור בוטל."
-            : appointment
-              ? "התור שלך בקו."
-              : "הכיסא עוד מחכה לך.";
+
+  async function resend() {
+    setBusy(true);
+    setError("");
+    setCode("");
+    try {
+      const challenge = await requestBookingOtp(phone);
+      setChallengeId(challenge.challengeId);
+      setCooldown(challenge.resendAfterSeconds ?? 60);
+    } catch (requestError) {
+      if (requestError instanceof ApiError && requestError.status === 429) {
+        setCooldown(requestError.details.retryAfterSeconds ?? 60);
+        setError("עדיין מוקדם לשלוח קוד נוסף. כדאי להמתין מעט.");
+      } else {
+        setError("לא הצלחנו ליצור קוד נוסף כרגע. כדאי לנסות שוב.");
+      }
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  const title = step === "details"
+    ? "נעים להכיר."
+    : step === "otp"
+    ? "רק לוודא שזה אתה."
+    : step === "success"
+    ? "סגור, יש לך תור."
+    : appointment
+    ? "התור שלך בקו."
+    : "הכיסא עוד מחכה לך.";
 
   return (
     <dialog
@@ -387,8 +502,9 @@ export function BookingDialog({
             event.clientX > rect.right ||
             event.clientY < rect.top ||
             event.clientY > rect.bottom
-          )
+          ) {
             onClose();
+          }
         }
       }}
     >
@@ -403,17 +519,17 @@ export function BookingDialog({
         {step === "details"
           ? "עוד רגע נפגשים"
           : step === "otp"
-            ? "אימות מספר הטלפון"
-            : "קו · ברברשופ שכונתי"}
+          ? "אימות מספר הטלפון"
+          : "קו · ברברשופ שכונתי"}
       </span>
-      {(step === "success" || step === "cancelled") && (
+      {step === "success" && (
         <div className="success-mark">
           <Check size={28} />
         </div>
       )}
       <h2 id="dialog-title">{title}</h2>
       <p className="demo-notice">
-        מצב הדגמה · לא נשלחות הודעות ולא נקבע תור אמיתי.
+        מצב פיתוח · הקוד מופיע בלוג המאובטח של Supabase עד ש-WhatsApp יחובר.
       </p>
       {(step === "details" || step === "otp") && (
         <div className="modal-slot">
@@ -456,8 +572,12 @@ export function BookingDialog({
               {error}
             </p>
           )}
-          <button className="button button-primary full-width" type="submit">
-            המשך לאימות
+          <button
+            className="button button-primary full-width"
+            type="submit"
+            disabled={busy}
+          >
+            {busy ? "יוצרים קוד..." : "המשך לאימות"}
             <ArrowLeft size={18} />
           </button>
         </form>
@@ -466,10 +586,8 @@ export function BookingDialog({
         <form onSubmit={verify} noValidate>
           <p className="otp-instruction">
             כאן נאמת את המספר <bdi>{phone}</bdi>.<br />
-            אפשר להתנסות עכשיו עם קוד ההדגמה:{" "}
-            <strong>
-              <bdi>{DEMO_CODE}</bdi>
-            </strong>
+            קוד בן שש ספרות נוצר ונשמר כ-HMAC. במצב הפיתוח הוא מופיע בלוג של
+            הפונקציה <bdi>request-booking-otp</bdi>.
           </p>
           <label htmlFor="otp-code">קוד בן 6 ספרות</label>
           <input
@@ -477,8 +595,7 @@ export function BookingDialog({
             className="otp-input"
             value={code}
             onChange={(event) =>
-              setCode(event.target.value.replace(/\D/g, "").slice(0, 6))
-            }
+              setCode(event.target.value.replace(/\D/g, "").slice(0, 6))}
             autoComplete="one-time-code"
             inputMode="numeric"
             dir="ltr"
@@ -491,18 +608,24 @@ export function BookingDialog({
               {error}
             </p>
           )}
-          <button type="submit" className="button button-primary full-width">
-            אימות וקביעת תור
+          <button
+            type="submit"
+            className="button button-primary full-width"
+            disabled={busy}
+          >
+            {busy ? "מאמתים וקובעים..." : "אימות וקביעת תור"}
             <Check size={18} />
           </button>
           <div className="otp-actions">
             <button
               type="button"
               className="text-button"
+              disabled={busy}
               onClick={() => {
                 setStep("details");
                 setError("");
                 setCode("");
+                setChallengeId("");
               }}
             >
               <ArrowRight size={14} />
@@ -511,14 +634,12 @@ export function BookingDialog({
             <button
               type="button"
               className="text-button"
-              disabled={cooldown > 0}
-              onClick={() => {
-                setCooldown(30);
-                setCode("");
-                setError(`קוד ההדגמה הוא ${DEMO_CODE}. לא נשלחה הודעה.`);
-              }}
+              disabled={cooldown > 0 || busy}
+              onClick={resend}
             >
-              {cooldown > 0 ? `קוד נוסף בעוד ${cooldown} שנ׳` : "הצגת קוד שוב"}
+              {cooldown > 0
+                ? `קוד נוסף בעוד ${cooldown} שנ׳`
+                : "שליחת קוד נוסף"}
             </button>
           </div>
         </form>
@@ -527,7 +648,7 @@ export function BookingDialog({
         <>
           <p className="modal-intro">
             {step === "success"
-              ? `${appointment.name}, חצי שעה לעצמך כבר ביומן ההדגמה.`
+              ? `${appointment.name}, התור נשמר בהצלחה במערכת.`
               : `${appointment.name}, אלה פרטי התור שלך.`}
           </p>
           <div className="confirmation-ticket">
@@ -556,50 +677,22 @@ export function BookingDialog({
               </strong>
             </div>
           </div>
-          {cancelPrompt ? (
-            <div className="cancel-confirm">
-              <p>לבטל את התור? השעה תתפנה להזמנה מחדש.</p>
-              <button
-                className="button button-danger"
-                onClick={() => {
-                  onCancel();
-                  setStep("cancelled");
-                }}
-              >
-                כן, לבטל את התור
-              </button>
-              <button
-                className="text-button"
-                onClick={() => setCancelPrompt(false)}
-              >
-                בעצם, להשאיר
-              </button>
-            </div>
-          ) : (
-            <>
-              <button
-                className="button button-primary full-width"
-                onClick={() => downloadCalendar(appointment)}
-              >
-                <Download size={18} />
-                הוספת תור ההדגמה ליומן
-              </button>
-              <button
-                className="text-button cancel-link"
-                onClick={() => setCancelPrompt(true)}
-              >
-                ביטול התור
-              </button>
-            </>
-          )}
+          <button
+            className="button button-primary full-width"
+            onClick={() => downloadCalendar(appointment)}
+          >
+            <Download size={18} />
+            הוספת התור ליומן
+          </button>
+          <p className="field-help booking-management-note">
+            ביטול עצמי יתווסף בשלב הבא. כרגע ניתן לפנות ישירות למספרה.
+          </p>
         </>
       )}
-      {(step === "cancelled" || (step === "manage" && !appointment)) && (
+      {step === "manage" && !appointment && (
         <>
           <p className="modal-intro">
-            {step === "cancelled"
-              ? "השעה התפנתה. אפשר לבחור זמן חדש שמתאים לך."
-              : "עדיין לא נקבע תור בהדגמה הזו. בוא נמצא לך זמן נוח."}
+            עדיין לא נשמר תור בדפדפן הזה. בוא נמצא לך זמן נוח.
           </p>
           <button
             className="button button-primary full-width"
@@ -609,8 +702,8 @@ export function BookingDialog({
                 .getElementById("booking")
                 .scrollIntoView({
                   behavior: window.matchMedia(
-                    "(prefers-reduced-motion: reduce)",
-                  ).matches
+                      "(prefers-reduced-motion: reduce)",
+                    ).matches
                     ? "instant"
                     : "smooth",
                 });

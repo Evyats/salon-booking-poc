@@ -45,7 +45,7 @@ const faqs = [
   ],
   [
     "מה אם אני צריך לבטל?",
-    "אפשר לבטל דרך הקישור שמצורף לאישור התור. בהדגמה הזו אפשר לפתוח את ״התור שלי״ ולנסות את הביטול.",
+    "בשלב הנוכחי פונים ישירות למספרה. בהמשך יישלח קישור אישי לביטול התור.",
   ],
   [
     "מה כלול בתספורת?",
@@ -57,6 +57,7 @@ export default function App() {
   const [menu, setMenu] = useState(false);
   const [appointment, setAppointment] = useState(readAppointment);
   const [modal, setModal] = useState(null);
+  const [availabilityVersion, setAvailabilityVersion] = useState(0);
   const navLinks = [
     { href: "#booking", label: "קביעת תור" },
     { href: "#about", label: "קצת על קו" },
@@ -66,6 +67,7 @@ export default function App() {
   function save(value) {
     setAppointment(value);
     storeAppointment(value);
+    setAvailabilityVersion((version) => version + 1);
   }
 
   return (
@@ -238,6 +240,7 @@ export default function App() {
         <div className="page-width">
           <Booking
             appointment={appointment}
+            availabilityVersion={availabilityVersion}
             onBook={(slot) => setModal({ kind: "details", slot })}
           />
           <section
@@ -443,7 +446,8 @@ export default function App() {
           appointment={appointment}
           onClose={() => setModal(null)}
           onConfirm={save}
-          onCancel={() => save(null)}
+          onAvailabilityChanged={() =>
+            setAvailabilityVersion((version) => version + 1)}
         />
       )}
     </>

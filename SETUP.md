@@ -88,12 +88,15 @@ the preview is approved, deploy production with:
 npx vercel --prod
 ```
 
-When the frontend starts using Supabase, copy the two `VITE_` variables from
-`frontend/.env.example` into the Vercel project's environment variables.
+Set `VITE_SUPABASE_URL` from `frontend/.env.example` in the Vercel project's
+environment variables. The current frontend does not need the publishable key
+because its booking Edge Functions are public and perform authorization with OTP
+challenges on the backend.
 
 ## Current boundaries
 
-The health and OTP functions are public. OTP endpoints validate inputs and apply
-per-number attempt/resend limits; stronger abuse controls are still required
-before production use. Database migrations and owner access rules are applied.
-WhatsApp delivery and real customer booking are later stages.
+The health, OTP, availability, and customer-booking functions are public. OTP
+endpoints validate inputs and apply per-number attempt/resend limits; stronger
+abuse controls are still required before production use. Booking creation checks
+the verified challenge, blocked status, allowed schedule, and slot conflict inside
+one database transaction. WhatsApp delivery is still mocked in protected logs.
