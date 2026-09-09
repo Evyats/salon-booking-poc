@@ -428,3 +428,15 @@ enabled = true
 verify_jwt = true
 import_map = "./functions/owner-health/deno.json"
 entrypoint = "./functions/owner-health/index.ts"
+
+[functions.request-booking-otp]
+enabled = true
+verify_jwt = false
+import_map = "./functions/request-booking-otp/deno.json"
+entrypoint = "./functions/request-booking-otp/index.ts"
+
+[functions.verify-booking-otp]
+enabled = true
+verify_jwt = false
+import_map = "./functions/verify-booking-otp/deno.json"
+entrypoint = "./functions/verify-booking-otp/index.ts"

@@ -64,9 +64,11 @@ After replacing every placeholder with a real value, upload the backend secrets:
 npx supabase secrets set --env-file supabase/functions/.env.local
 ```
 
-The WhatsApp values are intentionally deferred until Stage 2. Supabase provides
-its own URL and service-role credentials to deployed Edge Functions, so those do
-not need to be copied into this file.
+The hosted project currently uses `OTP_DELIVERY_MODE=mock`; generated codes are
+visible only in the `request-booking-otp` function logs. Replace this mode when
+the WhatsApp values become available. Supabase provides its own URL and
+service-role credentials to deployed Edge Functions, so those do not need to be
+copied into this file.
 
 ## Deploy the frontend to Vercel
 
@@ -91,6 +93,7 @@ When the frontend starts using Supabase, copy the two `VITE_` variables from
 
 ## Current boundaries
 
-The health function is public and contains no private data. The initial database
-migration is applied. Owner authentication, WhatsApp, and real customer booking
-are later stages.
+The health and OTP functions are public. OTP endpoints validate inputs and apply
+per-number attempt/resend limits; stronger abuse controls are still required
+before production use. Database migrations and owner access rules are applied.
+WhatsApp delivery and real customer booking are later stages.

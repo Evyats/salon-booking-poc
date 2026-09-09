@@ -31,8 +31,11 @@ confirmed appointments for the same half-hour slot. The owner Auth user now has
 the protected owner role. A protected owner-health function rejects requests
 without authentication; its owner-token success path will be tested with login.
 
-Next: begin the OTP backend with a temporary mock message sender while Meta
-verification is unavailable.
+Stage 5's backend is deployed: it creates and verifies short-lived OTP
+challenges using HMAC hashes, attempt limits, and resend limits. Until Meta is
+available, codes are written only to protected Edge Function logs by a temporary
+mock sender. Next: verify one correct code from the log, then connect this flow
+to the customer frontend in Stage 6.
 
 - [x] Review all supplied references and define one Hebrew, mobile-first identity.
 - [x] Implement the customer frontend with stock images and mock booking flow.
@@ -81,9 +84,13 @@ progress or blockers under its stage, and update the next-stage line above.
   - [ ] Apply the same guard before future owner actions use service-role access.
 
 - [ ] 5. OTP
-  - Generate codes and store keyed hashes (HMAC).
-  - Keep the HMAC secret in backend environment variables.
-  - Verify and consume codes; enforce expiry, attempt limits, and resend limits.
+  - [x] Generate codes and store keyed hashes (HMAC).
+  - [x] Keep the HMAC secret in backend environment variables.
+  - [x] Deploy public request and verification Edge Functions.
+  - [x] Enforce expiry, attempt limits, and resend limits.
+  - [x] Test challenge creation, wrong attempts, and resend blocking live.
+  - [ ] Verify one correct mock code from the protected function log.
+  - [ ] Consume a verified challenge atomically when Stage 6 creates a booking.
   - Phone verification authorizes booking; a persistent customer account/login
     is outside this POC's scope.
 
