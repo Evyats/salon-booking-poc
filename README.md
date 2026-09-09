@@ -38,7 +38,9 @@ never stored in a table.
 - `frontend/src/demo.js`: fixed opening hours and local display helpers.
 - `frontend/src/cancel/`: appointment-specific customer cancellation page.
 - `frontend/src/owner/`: authenticated owner login and scheduling dashboard.
+- `scripts/smoke-test.mjs`: non-destructive checks against the deployed API.
 - `supabase/`: local configuration, migrations, seed data, and Edge Functions.
+- `supabase/tests/database/`: transactional pgTAP tests for permissions and booking rules.
 - `supabase/functions/health/`: public backend health-check endpoint.
 - `supabase/functions/owner-health/`: authenticated owner-role check endpoint.
 - `supabase/functions/request-booking-otp/`: creates rate-limited OTP challenges.

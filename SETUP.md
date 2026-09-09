@@ -70,6 +70,30 @@ the WhatsApp values become available. Supabase provides its own URL and
 service-role credentials to deployed Edge Functions, so those do not need to be
 copied into this file.
 
+## Verification
+
+Run the non-destructive smoke suite against the linked deployment:
+
+```powershell
+node scripts/smoke-test.mjs
+```
+
+It reads the public URL and publishable key from `frontend/.env.local`, checks
+public endpoint contracts, and verifies that anonymous callers cannot access
+protected tables or SQL functions.
+
+Run the transactional database tests with Docker Desktop running:
+
+```powershell
+npx supabase start
+npx supabase test db supabase/tests/database
+npx supabase stop
+```
+
+The local stack rebuilds the database from the repository's migrations. The
+pgTAP files also wrap their temporary data in `begin`/`rollback`, so neither the
+local schema nor the hosted project is changed by a test run.
+
 ## Deploy the frontend to Vercel
 
 In the Vercel dashboard, set the project's **Root Directory** to `frontend`.

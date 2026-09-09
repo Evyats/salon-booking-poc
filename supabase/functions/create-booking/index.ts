@@ -1,6 +1,6 @@
 import "@supabase/functions-js/edge-runtime.d.ts";
 import { withSupabase } from "@supabase/server";
-import { sendBookingConfirmation } from "../_shared/booking-delivery.ts";
+import { deliverBookingConfirmationSafely } from "../_shared/booking-delivery.ts";
 import {
   generateCancellationToken,
   hashCancellationToken,
@@ -121,16 +121,12 @@ export default {
       .single();
 
     if (!challengeError && challenge) {
-      try {
-        sendBookingConfirmation(
-          challenge.phone_e164,
-          appointment.appointment_id,
-          appointment.starts_at,
-          cancellationToken,
-        );
-      } catch (deliveryError) {
-        console.error("Failed to deliver booking confirmation", deliveryError);
-      }
+      await deliverBookingConfirmationSafely(
+        challenge.phone_e164,
+        appointment.appointment_id,
+        appointment.starts_at,
+        cancellationToken,
+      );
     } else {
       console.error("Failed to load confirmation destination", challengeError);
     }

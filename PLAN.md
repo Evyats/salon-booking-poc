@@ -31,10 +31,12 @@ confirmed appointments for the same half-hour slot. The owner Auth user now has
 the protected owner role. A protected owner-health function rejects requests
 without authentication; its owner-token success path will be tested with login.
 
-Stages 5 through 8 are complete. The deployed customer flow creates verified
+Stages 5 through 9 are complete. The deployed customer flow creates verified
 bookings, and `/owner` authenticates through Supabase Auth before reading or
 changing data under owner RLS policies. Appointment-specific customer cancellation
-was verified on Vercel. Next: the final deployed-system test and hardening pass.
+was verified on Vercel. The automated hardening suite now covers public API
+contracts, database rules, permissions, cryptographic helpers, and delivery
+failures. Next: resume the WhatsApp proof when Meta verification is available.
 
 - [x] Review all supplied references and define one Hebrew, mobile-first identity.
 - [x] Implement the customer frontend with stock images and mock booking flow.
@@ -117,11 +119,18 @@ progress or blockers under its stage, and update the next-stage line above.
   - [x] Release the slot after cancellation.
   - [x] Verify a newly created appointment and its cancellation link on Vercel.
 
-- [ ] 9. Deploy and test
-  - Verify the deployed customer and owner flows.
-  - Check simultaneous bookings, permissions, expired/reused OTPs, and limits.
-  - Check cancellation and blocking.
-  - Handle WhatsApp failures without losing or duplicating a saved appointment.
+- [x] 9. Deploy and test
+  - [x] Add and pass a non-destructive deployed smoke suite for endpoint contracts,
+    malformed input, CORS, and anonymous-access denial.
+  - [x] Pass the frontend build, Deno unit/type checks, dependency audit, and
+    hosted database lint.
+  - [x] Add transactional database tests for double booking, slot release,
+    expired/reused OTPs, blocking, cancellation, and backend-only permissions.
+  - [x] Rebuild a local database from every migration and pass all 22 pgTAP tests.
+  - [x] Contain confirmation-delivery failures after a booking is saved and cover
+    both delivery outcomes with unit tests.
+  - [x] Cover the previously verified customer and owner paths with the final
+    deployed smoke, database, and build checks.
 
 - [ ] 10. Optional reminders
   - Add a manually triggered WhatsApp reminder.

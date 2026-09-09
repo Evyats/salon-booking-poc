@@ -22,3 +22,28 @@ export function sendBookingConfirmation(
     cancellationPath: `/cancel#${cancellationToken}`,
   }));
 }
+
+type BookingConfirmationDelivery = (
+  phone: string,
+  appointmentId: string,
+  startsAt: string,
+  cancellationToken: string,
+) => void | Promise<void>;
+
+export async function deliverBookingConfirmationSafely(
+  phone: string,
+  appointmentId: string,
+  startsAt: string,
+  cancellationToken: string,
+  deliver: BookingConfirmationDelivery = sendBookingConfirmation,
+  reportError: (error: unknown) => void = (error) =>
+    console.error("Failed to deliver booking confirmation", error),
+): Promise<boolean> {
+  try {
+    await deliver(phone, appointmentId, startsAt, cancellationToken);
+    return true;
+  } catch (error) {
+    reportError(error);
+    return false;
+  }
+}
