@@ -84,7 +84,8 @@ export function readAppointment() {
 }
 
 export function storeAppointment(appointment) {
-  // Keep only display details for this browser session—never phone numbers or OTPs.
+  // Keep display details and the cancellation credential for this tab only.
+  // Never keep phone numbers or OTPs here.
   try {
     if (appointment) {
       sessionStorage.setItem(STORAGE_KEY, JSON.stringify(appointment));

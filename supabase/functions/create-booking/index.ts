@@ -1,6 +1,10 @@
 import "@supabase/functions-js/edge-runtime.d.ts";
 import { withSupabase } from "@supabase/server";
 import { sendBookingConfirmation } from "../_shared/booking-delivery.ts";
+import {
+  generateCancellationToken,
+  hashCancellationToken,
+} from "../_shared/cancellation.ts";
 import type { Database } from "../_shared/database.types.ts";
 import { corsHeaders, json } from "../_shared/http.ts";
 
@@ -66,6 +70,18 @@ export default {
       return json({ error: "Invalid booking details" }, 400);
     }
 
+    const cancellationSecret = Deno.env.get("CANCELLATION_TOKEN_SECRET");
+    if (!cancellationSecret) {
+      console.error("CANCELLATION_TOKEN_SECRET is missing");
+      return json({ error: "Booking service unavailable" }, 503);
+    }
+
+    const cancellationToken = generateCancellationToken();
+    const cancellationTokenHash = await hashCancellationToken(
+      cancellationSecret,
+      cancellationToken,
+    );
+
     const { data, error } = await context.supabaseAdmin.rpc(
       "create_customer_booking",
       {
@@ -73,6 +89,7 @@ export default {
         p_full_name: fullName.trim(),
         p_booking_date: date,
         p_booking_time: time,
+        p_cancellation_token_hash: cancellationTokenHash,
       },
     );
 
@@ -109,6 +126,7 @@ export default {
           challenge.phone_e164,
           appointment.appointment_id,
           appointment.starts_at,
+          cancellationToken,
         );
       } catch (deliveryError) {
         console.error("Failed to deliver booking confirmation", deliveryError);
@@ -124,6 +142,7 @@ export default {
         name: appointment.customer_name,
         date,
         time,
+        cancellationToken,
       },
     }, 201);
   }),

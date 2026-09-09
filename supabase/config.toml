@@ -452,3 +452,9 @@ enabled = true
 verify_jwt = false
 import_map = "./functions/create-booking/deno.json"
 entrypoint = "./functions/create-booking/index.ts"
+
+[functions.appointment-cancellation]
+enabled = true
+verify_jwt = false
+import_map = "./functions/appointment-cancellation/deno.json"
+entrypoint = "./functions/appointment-cancellation/index.ts"

@@ -6,6 +6,7 @@ export function sendBookingConfirmation(
   phone: string,
   appointmentId: string,
   startsAt: string,
+  cancellationToken: string,
 ): void {
   const mode = Deno.env.get("OTP_DELIVERY_MODE");
 
@@ -18,5 +19,6 @@ export function sendBookingConfirmation(
     phone: maskedPhone(phone),
     appointmentId,
     startsAt,
+    cancellationPath: `/cancel#${cancellationToken}`,
   }));
 }

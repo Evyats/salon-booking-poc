@@ -14,6 +14,7 @@ export type Database = {
     Tables: {
       appointments: {
         Row: {
+          cancellation_token_hash: string | null;
           cancelled_at: string | null;
           created_at: string;
           created_by: string;
@@ -23,6 +24,7 @@ export type Database = {
           status: string;
         };
         Insert: {
+          cancellation_token_hash?: string | null;
           cancelled_at?: string | null;
           created_at?: string;
           created_by?: string;
@@ -32,6 +34,7 @@ export type Database = {
           status?: string;
         };
         Update: {
+          cancellation_token_hash?: string | null;
           cancelled_at?: string | null;
           created_at?: string;
           created_by?: string;
@@ -115,19 +118,43 @@ export type Database = {
       [_ in never]: never;
     };
     Functions: {
-      create_customer_booking: {
-        Args: {
-          p_booking_date: string;
-          p_booking_time: string;
-          p_challenge_id: string;
-          p_full_name: string;
-        };
+      cancel_customer_appointment: {
+        Args: { p_cancellation_token_hash: string };
         Returns: {
           appointment_id: string;
-          customer_name: string;
+          cancelled_at: string;
           starts_at: string;
+          status: string;
         }[];
       };
+      create_customer_booking:
+        | {
+          Args: {
+            p_booking_date: string;
+            p_booking_time: string;
+            p_challenge_id: string;
+            p_full_name: string;
+          };
+          Returns: {
+            appointment_id: string;
+            customer_name: string;
+            starts_at: string;
+          }[];
+        }
+        | {
+          Args: {
+            p_booking_date: string;
+            p_booking_time: string;
+            p_cancellation_token_hash: string;
+            p_challenge_id: string;
+            p_full_name: string;
+          };
+          Returns: {
+            appointment_id: string;
+            customer_name: string;
+            starts_at: string;
+          }[];
+        };
       create_owner_booking: {
         Args: {
           p_booking_date: string;

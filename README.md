@@ -26,15 +26,17 @@ mobile number. Until WhatsApp is connected, read the six-digit code from the
 `request-booking-otp` Edge Function logs in Supabase. A successful verification
 creates a real appointment in the hosted POC database.
 
-The browser stores only the returned appointment ID, name, date, and time for the
-current tab/session. The phone is stored in the protected database; plaintext OTPs
-appear only in temporary protected function logs and are never stored in a table.
+The browser stores the returned appointment display details and its cancellation
+credential for the current tab/session. The phone is stored in the protected
+database; plaintext OTPs appear only in temporary protected function logs and are
+never stored in a table.
 
 ## Project structure
 
 - `frontend/`: React/Vite app and local stock photography.
 - `frontend/src/api.js`: browser calls to the public booking Edge Functions.
 - `frontend/src/demo.js`: fixed opening hours and local display helpers.
+- `frontend/src/cancel/`: appointment-specific customer cancellation page.
 - `frontend/src/owner/`: authenticated owner login and scheduling dashboard.
 - `supabase/`: local configuration, migrations, seed data, and Edge Functions.
 - `supabase/functions/health/`: public backend health-check endpoint.
@@ -43,6 +45,8 @@ appear only in temporary protected function logs and are never stored in a table
 - `supabase/functions/verify-booking-otp/`: verifies OTP challenges and counts failures.
 - `supabase/functions/booking-slots/`: returns occupied slots without customer data.
 - `supabase/functions/create-booking/`: atomically creates a verified booking.
+- `supabase/functions/appointment-cancellation/`: loads or cancels the one
+  appointment authorized by a secure token.
 - `SETUP.md`: local commands and hosted Supabase/Vercel linking instructions.
 - `docs/design/DESIGN.md`: reference synthesis, design tokens, and image sources.
 - `docs/design/design-previews/`: desktop/mobile screenshots from the visual review.
@@ -51,8 +55,8 @@ appear only in temporary protected function logs and are never stored in a table
 
 The linked Supabase project has the database schema, access rules, customer
 booking endpoints, and owner booking function. OTP and confirmation delivery are
-temporarily mocked in protected function logs. The customer site is served at
-`/`; the authenticated owner dashboard is at `/owner`. Vercel uses `frontend/`
-as its project root.
+temporarily mocked in protected function logs. The customer site is served at `/`,
+secure appointment links open `/cancel`, and the authenticated owner dashboard is
+at `/owner`. Vercel uses `frontend/` as its project root.
 
 See `SETUP.md` for the current Supabase and Vercel setup.

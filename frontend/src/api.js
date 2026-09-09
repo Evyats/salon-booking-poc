@@ -65,3 +65,19 @@ export function createBooking({ challengeId, fullName, date, time }) {
     body: JSON.stringify({ challengeId, fullName, date, time }),
   });
 }
+
+export function getCancellationDetails(token) {
+  return callFunction("appointment-cancellation", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ action: "details", token }),
+  });
+}
+
+export function cancelCustomerAppointment(token) {
+  return callFunction("appointment-cancellation", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ action: "cancel", token }),
+  });
+}

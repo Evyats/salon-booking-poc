@@ -33,8 +33,8 @@ without authentication; its owner-token success path will be tested with login.
 
 Stages 5 through 7 are complete. The deployed customer flow creates verified
 bookings, and `/owner` authenticates through Supabase Auth before reading or
-changing data under owner RLS policies. Next: add appointment-specific customer
-cancellation links.
+changing data under owner RLS policies. Stage 8 is implemented and awaiting its
+final production-browser check after the frontend deployment.
 
 - [x] Review all supplied references and define one Hebrew, mobile-first identity.
 - [x] Implement the customer frontend with stock images and mock booking flow.
@@ -110,9 +110,12 @@ progress or blockers under its stage, and update the next-stage line above.
   - [x] Configure the Vercel publishable key and test all actions live.
 
 - [ ] 8. Customer cancellation
-  - Provide an unguessable link authorizing access to one appointment.
-  - Require an explicit confirmation button to cancel.
-  - Release the slot after cancellation.
+  - [x] Provide an unguessable link authorizing access to one appointment.
+  - [x] Store only an HMAC of the cancellation token in the database.
+  - [x] Keep the token in the URL fragment so it is not sent in HTTP request logs.
+  - [x] Require an explicit confirmation button to cancel.
+  - [x] Release the slot after cancellation.
+  - [ ] Verify a newly created appointment and its cancellation link on Vercel.
 
 - [ ] 9. Deploy and test
   - Verify the deployed customer and owner flows.

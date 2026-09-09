@@ -96,8 +96,10 @@ key in Vercel's frontend environment.
 
 ## Current boundaries
 
-The health, OTP, availability, and customer-booking functions are public. OTP
-endpoints validate inputs and apply per-number attempt/resend limits; stronger
-abuse controls are still required before production use. Booking creation checks
-the verified challenge, blocked status, allowed schedule, and slot conflict inside
-one database transaction. WhatsApp delivery is still mocked in protected logs.
+The health, OTP, availability, customer-booking, and appointment-cancellation
+functions are public. OTP endpoints validate inputs and apply per-number
+attempt/resend limits; stronger abuse controls are still required before
+production use. Booking creation checks the verified challenge, blocked status,
+allowed schedule, and slot conflict inside one database transaction. Cancellation
+links carry an unguessable token in the URL fragment; only its HMAC is stored in
+the database. WhatsApp delivery is still mocked in protected logs.

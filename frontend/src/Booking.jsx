@@ -17,6 +17,7 @@ import {
   ShieldCheck,
   Sun,
   Sunset,
+  Trash2,
   X,
 } from "lucide-react";
 import {
@@ -684,9 +685,19 @@ export function BookingDialog({
             <Download size={18} />
             הוספת התור ליומן
           </button>
-          <p className="field-help booking-management-note">
-            ביטול עצמי יתווסף בשלב הבא. כרגע ניתן לפנות ישירות למספרה.
-          </p>
+          {appointment.cancellationToken ? (
+            <a
+              className="text-button cancel-link"
+              href={`/cancel#${appointment.cancellationToken}`}
+            >
+              <Trash2 size={14} />
+              ביטול התור
+            </a>
+          ) : (
+            <p className="field-help booking-management-note">
+              לתור הזה לא נשמר קישור ביטול. ניתן לפנות ישירות למספרה.
+            </p>
+          )}
         </>
       )}
       {step === "manage" && !appointment && (
